@@ -8,6 +8,7 @@ public class Personality {
         return sum * 4; // Scale 20–100
     }
 
+
     public static Participant.PersonalityType classify(int score) {
         if (score >= 90) return Participant.PersonalityType.LEADER;
         if (score >= 70) return Participant.PersonalityType.BALANCED;
