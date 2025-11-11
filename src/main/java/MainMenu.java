@@ -3,6 +3,7 @@ package main.java;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 public class MainMenu {
 
@@ -24,7 +25,7 @@ public class MainMenu {
                     case "1" -> addParticipant(sc, participantsPath);
                     case "2" -> formTeams(sc, participantsPath, teamsPath);
                     case "3" -> {
-                        System.out.println("Goodbye!");
+                        System.out.println("👋 Goodbye!");
                         return;
                     }
                     default -> System.out.println("Invalid option.");
@@ -35,7 +36,7 @@ public class MainMenu {
         }
     }
 
-    private static void addParticipant(Scanner sc, Path path) throws IOException {
+    private static void addParticipant(Scanner sc, Path path) throws IOException, InterruptedException {
         List<Participant> participants = CSVHandler.load(path);
 
         System.out.print("Enter Player ID (e.g., P101): ");
@@ -83,12 +84,32 @@ public class MainMenu {
             answers[i] = Integer.parseInt(sc.nextLine());
         }
 
-        int score = Personality.calculateScore(answers);
-        Participant.PersonalityType type = Personality.classify(score);
+        // ⚙️ Process survey in a separate thread
+        ExecutorService surveyThread = Executors.newSingleThreadExecutor();
+        Future<Participant> future = surveyThread.submit(() -> {
+            int score = Personality.calculateScore(answers);
+            Participant.PersonalityType type = Personality.classify(score);
+            return new Participant(id, name, email, game, skill, role, score, type);
+        });
 
-        participants.add(new Participant(id, name, email, game, skill, role, score, type));
+        Participant newP = null;
+        try {
+            newP = future.get(); // waits for survey scoring
+        } catch (Exception e) {
+            throw new RuntimeException("Error calculating personality: " + e.getMessage());
+        }
+        surveyThread.shutdown();
+
+        // Add to CSV
+        participants.add(newP);
         CSVHandler.save(path, participants);
-        System.out.println("✅ Player added successfully and saved to participants.csv!");
+
+        // ✅ Preview in console
+        System.out.println("\n✅ Player added successfully!");
+        System.out.println("---------------------------------------");
+        System.out.printf("ID: %s%nName: %s%nGame: %s%nSkill: %d%nRole: %s%nPersonality: %s (%d)%n",
+                newP.id, newP.name, newP.game, newP.skill, newP.role, newP.type, newP.score);
+        System.out.println("---------------------------------------");
     }
 
     private static void formTeams(Scanner sc, Path participantsPath, Path teamsPath)
@@ -101,7 +122,10 @@ public class MainMenu {
 
         System.out.print("Enter team size: ");
         int teamSize = Integer.parseInt(sc.nextLine());
+
+        System.out.println("⚙️ Forming balanced teams...");
         List<Team> teams = TeamBuilder.build(new ArrayList<>(players), teamSize);
+
         TeamBuilder.saveTeams(teamsPath, teams);
         System.out.println("✅ Teams created and saved to formed_teams.csv!");
     }
