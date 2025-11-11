@@ -135,7 +135,7 @@ public class MainMenu {
         System.out.print("Enter team size: ");
         int teamSize = Integer.parseInt(sc.nextLine());
 
-        System.out.println("\n⚙️ Forming balanced teams...");
+        System.out.println("\n⚙️ Forming balanced teams....");
         List<Team> teams = TeamBuilder.build(new ArrayList<>(players), teamSize);
 
         TeamBuilder.saveTeams(teamsPath, teams);
