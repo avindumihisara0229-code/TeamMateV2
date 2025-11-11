@@ -36,7 +36,8 @@ public class MainMenu {
         }
     }
 
-    private static void addParticipant(Scanner sc, Path path) throws IOException, InterruptedException {
+    // 🧠 Add new participant + personality survey
+    private static void addParticipant(Scanner sc, Path path) throws IOException {
         List<Participant> participants = CSVHandler.load(path);
 
         System.out.print("Enter Player ID (e.g., P101): ");
@@ -81,10 +82,16 @@ public class MainMenu {
         for (int i = 0; i < questions.length; i++) {
             System.out.println(questions[i]);
             System.out.print("Rate (1–5): ");
-            answers[i] = Integer.parseInt(sc.nextLine());
+            try {
+                answers[i] = Integer.parseInt(sc.nextLine());
+                if (answers[i] < 1 || answers[i] > 5) throw new NumberFormatException();
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a number between 1 and 5.");
+                i--; // repeat question
+            }
         }
 
-        // ⚙️ Process survey in a separate thread
+        // ⚙️ Run survey processing on a separate thread
         ExecutorService surveyThread = Executors.newSingleThreadExecutor();
         Future<Participant> future = surveyThread.submit(() -> {
             int score = Personality.calculateScore(answers);
@@ -94,24 +101,29 @@ public class MainMenu {
 
         Participant newP = null;
         try {
-            newP = future.get(); // waits for survey scoring
-        } catch (Exception e) {
-            throw new RuntimeException("Error calculating personality: " + e.getMessage());
+            newP = future.get(); // Wait for background thread
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Error calculating personality: " + e.getCause());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Thread interrupted while processing survey.");
+        } finally {
+            surveyThread.shutdown();
         }
-        surveyThread.shutdown();
 
-        // Add to CSV
+        // ✅ Add participant and save to CSV
         participants.add(newP);
         CSVHandler.save(path, participants);
 
-        // ✅ Preview in console
+        // 🎯 Preview summary in console
         System.out.println("\n✅ Player added successfully!");
         System.out.println("---------------------------------------");
-        System.out.printf("ID: %s%nName: %s%nGame: %s%nSkill: %d%nRole: %s%nPersonality: %s (%d)%n",
-                newP.id, newP.name, newP.game, newP.skill, newP.role, newP.type, newP.score);
+        System.out.printf("ID: %s%nName: %s%nEmail: %s%nGame: %s%nSkill: %d%nRole: %s%nPersonality: %s (%d)%n",
+                newP.id, newP.name, newP.email, newP.game, newP.skill, newP.role, newP.type, newP.score);
         System.out.println("---------------------------------------");
     }
 
+    // 🧩 Form and save balanced teams
     private static void formTeams(Scanner sc, Path participantsPath, Path teamsPath)
             throws IOException, InterruptedException {
         List<Participant> players = CSVHandler.load(participantsPath);
@@ -123,10 +135,16 @@ public class MainMenu {
         System.out.print("Enter team size: ");
         int teamSize = Integer.parseInt(sc.nextLine());
 
-        System.out.println("⚙️ Forming balanced teams...");
+        System.out.println("\n⚙️ Forming balanced teams...");
         List<Team> teams = TeamBuilder.build(new ArrayList<>(players), teamSize);
 
         TeamBuilder.saveTeams(teamsPath, teams);
-        System.out.println("✅ Teams created and saved to formed_teams.csv!");
+        System.out.println("\n✅ Teams created and saved to formed_teams.csv!");
+
+        // Display summary in console
+        System.out.println("\n=== TEAM SUMMARIES ===");
+        for (Team t : teams) {
+            System.out.println(t.getSummary());
+        }
     }
 }

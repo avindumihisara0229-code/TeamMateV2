@@ -18,7 +18,7 @@ public class CSVHandler {
         }
 
         List<String> lines = Files.readAllLines(path);
-        if (lines.size() <= 1) return list; // skip empty
+        if (lines.size() <= 1) return list;
 
         for (int i = 1; i < lines.size(); i++) {
             String[] data = lines.get(i).split(",");

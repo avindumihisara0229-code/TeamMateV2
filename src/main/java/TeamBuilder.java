@@ -1,6 +1,6 @@
 package main.java;
 
-import java.io.*;
+import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.*;
@@ -15,13 +15,10 @@ public class TeamBuilder {
         List<Team> teams = new ArrayList<>();
         for (int i = 0; i < totalTeams; i++) teams.add(new Team(i + 1));
 
-        // ⚙️ Thread pool for parallel team forming
         ExecutorService ex = Executors.newFixedThreadPool(Math.min(totalTeams, 4));
-
         for (Team team : teams) {
             ex.submit(() -> allocateBalancedTeam(players, team, teamSize));
         }
-
         ex.shutdown();
         ex.awaitTermination(5, TimeUnit.SECONDS);
 
@@ -29,7 +26,6 @@ public class TeamBuilder {
         return teams;
     }
 
-    // 🎯 Balanced Allocation
     private static synchronized void allocateBalancedTeam(List<Participant> pool, Team team, int teamSize) {
         Map<String, Long> gameCount = new HashMap<>();
         Set<Participant.Role> roles = new HashSet<>();
@@ -47,16 +43,17 @@ public class TeamBuilder {
             if (roles.size() >= 3 && team.members.size() >= teamSize) break;
         }
 
-        // Ensure at least one Leader if possible
         if (team.members.stream().noneMatch(m -> m.type == Participant.PersonalityType.LEADER)) {
             pool.stream()
                     .filter(m -> m.type == Participant.PersonalityType.LEADER)
                     .findFirst()
-                    .ifPresent(m -> { team.members.add(m); pool.remove(m); });
+                    .ifPresent(m -> {
+                        team.members.add(m);
+                        pool.remove(m);
+                    });
         }
     }
 
-    // ⚖️ Skill Balancing across teams
     private static void balanceSkillLevels(List<Team> teams) {
         double avg = teams.stream()
                 .mapToDouble(t -> t.members.stream().mapToInt(m -> m.skill).average().orElse(0))
@@ -64,17 +61,16 @@ public class TeamBuilder {
 
         for (Team t : teams) {
             double teamAvg = t.members.stream().mapToInt(m -> m.skill).average().orElse(0);
-            if (teamAvg > avg + 2) Collections.shuffle(t.members); // randomize if too strong
+            if (teamAvg > avg + 2) Collections.shuffle(t.members);
         }
     }
 
-    // 🧾 Save formed teams + summary rows
     public static void saveTeams(Path path, List<Team> teams) throws IOException {
         List<String> lines = new ArrayList<>();
         lines.add("TeamID,PlayerID,Name,Game,Skill,Role,PersonalityType");
 
         for (Team t : teams) {
-            // Add each player
+            // List all members of this team
             for (Participant p : t.members) {
                 lines.add(String.join(",",
                         "Team " + t.id,
@@ -87,28 +83,27 @@ public class TeamBuilder {
                 ));
             }
 
-            // Calculate summary
+            // Add clean summary row
             if (!t.members.isEmpty()) {
-                double avgSkill = t.members.stream().mapToInt(m -> m.skill).average().orElse(0);
+                double avgSkill = t.getAverageSkill();
+                int uniqueRoles = t.getUniqueRoleCount();
                 long leaders = t.members.stream().filter(m -> m.type == Participant.PersonalityType.LEADER).count();
-                long thinkers = t.members.stream().filter(m -> m.type == Participant.PersonalityType.THINKER).count();
                 long balanced = t.members.stream().filter(m -> m.type == Participant.PersonalityType.BALANCED).count();
-
-                Set<Participant.Role> uniqueRoles = new HashSet<>();
-                for (Participant p : t.members) uniqueRoles.add(p.role);
+                long thinkers = t.members.stream().filter(m -> m.type == Participant.PersonalityType.THINKER).count();
 
                 lines.add(String.join(",",
                         "Team " + t.id + " SUMMARY",
                         "",
                         "",
-                        "Avg Skill: " + String.format("%.1f", avgSkill),
-                        "Roles: " + uniqueRoles.size(),
+                        "Average Skill: " + String.format("%.1f", avgSkill),
+                        "Unique Roles: " + uniqueRoles,
                         "Personalities: " + leaders + "L/" + balanced + "B/" + thinkers + "T",
                         ""
                 ));
             }
 
-            lines.add(""); // blank line between teams
+            // Add blank line between teams
+            lines.add("");
         }
 
         Files.createDirectories(path.getParent());
