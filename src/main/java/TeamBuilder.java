@@ -15,45 +15,68 @@ public class TeamBuilder {
         List<Team> teams = new ArrayList<>();
         for (int i = 0; i < totalTeams; i++) teams.add(new Team(i + 1));
 
+        // Divide participants into chunks first
+        List<List<Participant>> chunks = new ArrayList<>();
+        for (int i = 0; i < players.size(); i += teamSize) {
+            chunks.add(players.subList(i, Math.min(i + teamSize, players.size())));
+        }
+
+        // Parallel team formation
         ExecutorService ex = Executors.newFixedThreadPool(Math.min(totalTeams, 4));
-        for (Team team : teams) {
-            ex.submit(() -> allocateBalancedTeam(players, team, teamSize));
+        for (int i = 0; i < chunks.size(); i++) {
+            final int teamIndex = i;
+            ex.submit(() -> allocateBalancedTeam(chunks.get(teamIndex), teams.get(teamIndex)));
         }
         ex.shutdown();
-        ex.awaitTermination(5, TimeUnit.SECONDS);
+        ex.awaitTermination(10, TimeUnit.SECONDS);
 
+        // Skill rebalancing
         balanceSkillLevels(teams);
         return teams;
     }
 
-    private static synchronized void allocateBalancedTeam(List<Participant> pool, Team team, int teamSize) {
+    // 🎯 New: allocate team from a predefined chunk
+    private static void allocateBalancedTeam(List<Participant> chunk, Team team) {
+        // Map for game cap and unique roles
         Map<String, Long> gameCount = new HashMap<>();
         Set<Participant.Role> roles = new HashSet<>();
 
-        while (team.members.size() < teamSize && !pool.isEmpty()) {
-            Participant p = pool.remove(0);
-            long count = gameCount.getOrDefault(p.game, 0L);
+        List<Participant> finalMembers = new ArrayList<>();
 
-            if (count < 2) { // Game cap: max 2 per game
-                team.members.add(p);
+        for (Participant p : chunk) {
+            long count = gameCount.getOrDefault(p.game, 0L);
+            if (count < 2) { // cap: max 2 per game
+                finalMembers.add(p);
                 gameCount.put(p.game, count + 1);
                 roles.add(p.role);
             }
-
-            if (roles.size() >= 3 && team.members.size() >= teamSize) break;
         }
 
-        if (team.members.stream().noneMatch(m -> m.type == Participant.PersonalityType.LEADER)) {
-            pool.stream()
-                    .filter(m -> m.type == Participant.PersonalityType.LEADER)
-                    .findFirst()
-                    .ifPresent(m -> {
-                        team.members.add(m);
-                        pool.remove(m);
-                    });
+        // If too few due to caps, fill remaining slots randomly from chunk
+        if (finalMembers.size() < chunk.size()) {
+            for (Participant p : chunk) {
+                if (!finalMembers.contains(p)) {
+                    finalMembers.add(p);
+                }
+                if (finalMembers.size() >= chunk.size()) break;
+            }
         }
+
+        // Guarantee at least one leader
+        boolean hasLeader = finalMembers.stream().anyMatch(m -> m.type == Participant.PersonalityType.LEADER);
+        if (!hasLeader) {
+            for (Participant p : chunk) {
+                if (p.type == Participant.PersonalityType.LEADER && !finalMembers.contains(p)) {
+                    finalMembers.set(finalMembers.size() - 1, p);
+                    break;
+                }
+            }
+        }
+
+        team.members.addAll(finalMembers);
     }
 
+    // ⚖️ Skill balancing
     private static void balanceSkillLevels(List<Team> teams) {
         double avg = teams.stream()
                 .mapToDouble(t -> t.members.stream().mapToInt(m -> m.skill).average().orElse(0))
@@ -65,12 +88,12 @@ public class TeamBuilder {
         }
     }
 
+    // 🧾 Save teams (same as before, clean format)
     public static void saveTeams(Path path, List<Team> teams) throws IOException {
         List<String> lines = new ArrayList<>();
         lines.add("TeamID,PlayerID,Name,Game,Skill,Role,PersonalityType");
 
         for (Team t : teams) {
-            // List all members of this team
             for (Participant p : t.members) {
                 lines.add(String.join(",",
                         "Team " + t.id,
@@ -83,7 +106,6 @@ public class TeamBuilder {
                 ));
             }
 
-            // Add clean summary row
             if (!t.members.isEmpty()) {
                 double avgSkill = t.getAverageSkill();
                 int uniqueRoles = t.getUniqueRoleCount();
@@ -101,8 +123,6 @@ public class TeamBuilder {
                         ""
                 ));
             }
-
-            // Add blank line between teams
             lines.add("");
         }
 
