@@ -51,7 +51,7 @@ public class MainMenu {
         }
     }
 
-    // 📥 Import external CSV
+    // Import external CSV
     private static void importParticipants(Scanner sc, Path defaultPath) {
         System.out.print("Enter full file path to import (e.g., C:/Downloads/class_list.csv): ");
         String inputPath = sc.nextLine().trim();
@@ -70,7 +70,7 @@ public class MainMenu {
         }
     }
 
-    // 📤 Export formed teams
+    // Export formed teams
     private static void exportTeams(Scanner sc, Path defaultTeamPath) {
         if (!Files.exists(defaultTeamPath)) {
             System.out.println("⚠️ No formed teams found. Please run 'Form Teams' (Option 2) first.");
@@ -98,7 +98,7 @@ public class MainMenu {
         System.out.print("Enter Name: ");
         String name = getValidInput(sc, "Name");
 
-        // 📧 FIXED: Uses helper method so 'email' is assigned only ONCE (Effectively Final)
+        // FIXED: Uses helper method so 'email' is assigned only ONCE (Effectively Final)
         String email = getValidEmail(sc);
 
         System.out.println("\nSelect Game:");
@@ -137,7 +137,7 @@ public class MainMenu {
             answers[i] = getValidInt(sc, 1, 5);
         }
 
-        // 🧵 Threading for Survey
+        //  Threading for Survey
         ExecutorService surveyThread = Executors.newSingleThreadExecutor();
         Future<Participant> future = surveyThread.submit(() -> {
             // 'email' is now safe to use because it is effectively final
@@ -183,7 +183,7 @@ public class MainMenu {
         }
     }
 
-    // 🛠️ NEW HELPER: Logic extracted here to keep 'email' variable final in main method
+    //  logic extracted here to keep 'email' variable final in main method
     private static String getValidEmail(Scanner sc) {
         while (true) {
             System.out.print("Enter Email: ");
@@ -195,7 +195,7 @@ public class MainMenu {
         }
     }
 
-    // 🛠️ HELPER: Validate Integers
+    //  HELPER: Validate Integers
     private static int getValidInt(Scanner sc, int min, int max) {
         int input;
         while (true) {
@@ -213,7 +213,7 @@ public class MainMenu {
         }
     }
 
-    // 🛠️ HELPER: Validate String Input
+    //  HELPER: Validate String Input
     private static String getValidInput(Scanner sc, String fieldName) {
         String input;
         while (true) {
