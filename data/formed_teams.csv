@@ -1,141 +1,141 @@
 TeamID,PlayerID,Name,Game,Skill,Role,PersonalityType
-Team 1,P090,Participant_90,Chess,5,COORDINATOR,THINKER
-Team 1,P067,Participant_67,Basketball,1,ATTACKER,LEADER
-Team 1,P066,Participant_66,Chess,1,STRATEGIST,THINKER
-Team 1,P025,Participant_25,FIFA,9,COORDINATOR,LEADER
-Team 1,P029,Participant_29,Basketball,5,SUPPORTER,BALANCED
-Team 1 SUMMARY,,,Average Skill: 4.2,Unique Roles: 4,Personalities: 2L/1B/2T,
+Team 1,P071,Participant_71,Chess,8,STRATEGIST,BALANCED
+Team 1,P087,Participant_87,Basketball,4,ATTACKER,THINKER
+Team 1,P083,Participant_83,DOTA 2,10,DEFENDER,BALANCED
+Team 1,P099,Participant_99,Valorant,3,SUPPORTER,THINKER
+Team 1,P095,Participant_95,CS:GO,2,COORDINATOR,BALANCED
+Team 1 SUMMARY,,,Average Skill: 5.4,Unique Roles: 5,Personalities: 0L/3B/2T,
 
-Team 2,P062,Participant_62,Basketball,6,ATTACKER,BALANCED
-Team 2,P089,Participant_89,Chess,6,SUPPORTER,BALANCED
-Team 2,P075,Participant_75,Valorant,8,COORDINATOR,THINKER
-Team 2,P038,Participant_38,Valorant,1,DEFENDER,BALANCED
-Team 2,P030,Participant_30,CS:GO,4,COORDINATOR,THINKER
-Team 2 SUMMARY,,,Average Skill: 5.0,Unique Roles: 4,Personalities: 0L/3B/2T,
+Team 2,P012,Participant_12,DOTA 2,3,ATTACKER,THINKER
+Team 2,P057,Participant_57,CS:GO,7,ATTACKER,THINKER
+Team 2,P043,Participant_43,DOTA 2,2,DEFENDER,LEADER
+Team 2,P046,Participant_46,CS:GO,5,STRATEGIST,LEADER
+Team 2,P015,Participant_15,DOTA 2,8,COORDINATOR,THINKER
+Team 2 SUMMARY,,,Average Skill: 5.0,Unique Roles: 4,Personalities: 2L/0B/3T,
 
-Team 3,P058,Participant_58,Valorant,3,DEFENDER,LEADER
-Team 3,P017,Participant_17,CS:GO,10,ATTACKER,BALANCED
-Team 3,P022,Participant_22,Chess,9,ATTACKER,LEADER
-Team 3,P045,Participant_45,Chess,2,COORDINATOR,THINKER
-Team 3,P007,Participant_7,DOTA 2,5,ATTACKER,LEADER
-Team 3 SUMMARY,,,Average Skill: 5.8,Unique Roles: 3,Personalities: 3L/1B/1T,
+Team 3,P091,Participant_91,FIFA,10,STRATEGIST,LEADER
+Team 3,P048,Participant_48,Valorant,6,DEFENDER,THINKER
+Team 3,P050,Participant_50,Basketball,5,COORDINATOR,BALANCED
+Team 3,P030,Participant_30,CS:GO,4,COORDINATOR,THINKER
+Team 3,P066,Participant_66,Chess,1,STRATEGIST,THINKER
+Team 3 SUMMARY,,,Average Skill: 5.2,Unique Roles: 3,Personalities: 1L/1B/3T,
 
-Team 4,P063,Participant_63,Chess,8,DEFENDER,THINKER
-Team 4,P004,Participant_4,Basketball,4,SUPPORTER,LEADER
-Team 4,P028,Participant_28,CS:GO,8,DEFENDER,LEADER
-Team 4,P039,Participant_39,FIFA,5,SUPPORTER,THINKER
-Team 4,P055,Participant_55,Chess,8,COORDINATOR,LEADER
-Team 4 SUMMARY,,,Average Skill: 6.6,Unique Roles: 3,Personalities: 3L/0B/2T,
+Team 4,P016,Participant_16,CS:GO,6,STRATEGIST,LEADER
+Team 4,P070,Participant_70,Basketball,1,COORDINATOR,LEADER
+Team 4,P005,Participant_5,CS:GO,9,COORDINATOR,BALANCED
+Team 4,P084,Participant_84,FIFA,5,SUPPORTER,THINKER
+Team 4,P093,Participant_93,CS:GO,4,DEFENDER,THINKER
+Team 4 SUMMARY,,,Average Skill: 5.0,Unique Roles: 4,Personalities: 2L/1B/2T,
 
-Team 5,P037,Participant_37,DOTA 2,8,ATTACKER,LEADER
-Team 5,P014,Participant_14,FIFA,3,SUPPORTER,BALANCED
-Team 5,P010,Participant_10,Valorant,5,COORDINATOR,LEADER
-Team 5,P043,Participant_43,DOTA 2,2,DEFENDER,LEADER
-Team 5,P093,Participant_93,CS:GO,4,DEFENDER,THINKER
-Team 5 SUMMARY,,,Average Skill: 4.4,Unique Roles: 4,Personalities: 3L/1B/1T,
+Team 5,P073,Participant_73,DOTA 2,8,DEFENDER,LEADER
+Team 5,P080,Participant_80,Basketball,1,COORDINATOR,BALANCED
+Team 5,P069,Participant_69,CS:GO,5,SUPPORTER,THINKER
+Team 5,P061,Participant_61,CS:GO,7,STRATEGIST,LEADER
+Team 5,P075,Participant_75,Valorant,8,COORDINATOR,THINKER
+Team 5 SUMMARY,,,Average Skill: 5.8,Unique Roles: 4,Personalities: 2L/1B/2T,
 
-Team 6,P018,Participant_18,FIFA,3,DEFENDER,THINKER
-Team 6,P076,Participant_76,FIFA,7,STRATEGIST,LEADER
-Team 6,P005,Participant_5,CS:GO,9,COORDINATOR,BALANCED
-Team 6,P094,Participant_94,CS:GO,2,SUPPORTER,LEADER
-Team 6,P049,Participant_49,Basketball,3,SUPPORTER,LEADER
-Team 6 SUMMARY,,,Average Skill: 4.8,Unique Roles: 4,Personalities: 3L/1B/1T,
+Team 6,P097,Participant_97,FIFA,3,ATTACKER,LEADER
+Team 6,P067,Participant_67,Basketball,1,ATTACKER,LEADER
+Team 6,P098,Participant_98,CS:GO,5,DEFENDER,BALANCED
+Team 6,P065,Participant_65,DOTA 2,7,COORDINATOR,BALANCED
+Team 6,P011,Participant_11,Basketball,8,STRATEGIST,BALANCED
+Team 6 SUMMARY,,,Average Skill: 4.8,Unique Roles: 4,Personalities: 2L/3B/0T,
 
-Team 7,P073,Participant_73,DOTA 2,8,DEFENDER,LEADER
-Team 7,P056,Participant_56,Basketball,4,STRATEGIST,BALANCED
-Team 7,P081,Participant_81,FIFA,10,STRATEGIST,THINKER
-Team 7,P097,Participant_97,FIFA,3,ATTACKER,LEADER
-Team 7,P080,Participant_80,Basketball,1,COORDINATOR,BALANCED
-Team 7 SUMMARY,,,Average Skill: 5.2,Unique Roles: 4,Personalities: 2L/2B/1T,
+Team 7,P003,Participant_3,FIFA,4,DEFENDER,THINKER
+Team 7,P027,Participant_27,Chess,6,ATTACKER,THINKER
+Team 7,P039,Participant_39,FIFA,5,SUPPORTER,THINKER
+Team 7,P024,Participant_24,DOTA 2,7,SUPPORTER,THINKER
+Team 7,P076,Participant_76,FIFA,7,STRATEGIST,LEADER
+Team 7 SUMMARY,,,Average Skill: 5.8,Unique Roles: 4,Personalities: 1L/0B/4T,
 
-Team 8,P016,Participant_16,CS:GO,6,STRATEGIST,LEADER
+Team 8,P047,Participant_47,DOTA 2,10,ATTACKER,BALANCED
 Team 8,P033,Participant_33,FIFA,7,DEFENDER,THINKER
-Team 8,P068,Participant_68,Chess,1,DEFENDER,BALANCED
-Team 8,P009,Participant_9,CS:GO,6,SUPPORTER,THINKER
-Team 8,P011,Participant_11,Basketball,8,STRATEGIST,BALANCED
-Team 8 SUMMARY,,,Average Skill: 5.6,Unique Roles: 3,Personalities: 1L/2B/2T,
+Team 8,P019,Participant_19,FIFA,9,SUPPORTER,LEADER
+Team 8,P042,Participant_42,DOTA 2,7,ATTACKER,THINKER
+Team 8,P085,Participant_85,Basketball,10,COORDINATOR,LEADER
+Team 8 SUMMARY,,,Average Skill: 8.6,Unique Roles: 4,Personalities: 2L/1B/2T,
 
-Team 9,P065,Participant_65,DOTA 2,7,COORDINATOR,BALANCED
-Team 9,P012,Participant_12,DOTA 2,3,ATTACKER,THINKER
-Team 9,P070,Participant_70,Basketball,1,COORDINATOR,LEADER
-Team 9,P087,Participant_87,Basketball,4,ATTACKER,THINKER
-Team 9,P079,Participant_79,Chess,5,SUPPORTER,LEADER
-Team 9 SUMMARY,,,Average Skill: 4.0,Unique Roles: 3,Personalities: 2L/1B/2T,
+Team 9,P029,Participant_29,Basketball,5,SUPPORTER,BALANCED
+Team 9,P045,Participant_45,Chess,2,COORDINATOR,THINKER
+Team 9,P056,Participant_56,Basketball,4,STRATEGIST,BALANCED
+Team 9,P018,Participant_18,FIFA,3,DEFENDER,THINKER
+Team 9,P059,Participant_59,DOTA 2,4,SUPPORTER,BALANCED
+Team 9 SUMMARY,,,Average Skill: 3.6,Unique Roles: 4,Personalities: 0L/3B/2T,
 
-Team 10,P096,Participant_96,DOTA 2,8,STRATEGIST,THINKER
-Team 10,P048,Participant_48,Valorant,6,DEFENDER,THINKER
-Team 10,P046,Participant_46,CS:GO,5,STRATEGIST,LEADER
-Team 10,P086,Participant_86,FIFA,9,STRATEGIST,BALANCED
-Team 10,P083,Participant_83,DOTA 2,10,DEFENDER,BALANCED
-Team 10 SUMMARY,,,Average Skill: 7.6,Unique Roles: 2,Personalities: 1L/2B/2T,
+Team 10,P031,Participant_31,Basketball,8,STRATEGIST,LEADER
+Team 10,P081,Participant_81,FIFA,10,STRATEGIST,THINKER
+Team 10,P009,Participant_9,CS:GO,6,SUPPORTER,THINKER
+Team 10,P034,Participant_34,FIFA,7,SUPPORTER,LEADER
+Team 10,P006,Participant_6,CS:GO,2,STRATEGIST,THINKER
+Team 10 SUMMARY,,,Average Skill: 6.6,Unique Roles: 2,Personalities: 2L/0B/3T,
 
-Team 11,P008,Participant_8,Valorant,10,DEFENDER,BALANCED
-Team 11,P095,Participant_95,CS:GO,2,COORDINATOR,BALANCED
+Team 11,P049,Participant_49,Basketball,3,SUPPORTER,LEADER
+Team 11,P090,Participant_90,Chess,5,COORDINATOR,THINKER
+Team 11,P089,Participant_89,Chess,6,SUPPORTER,BALANCED
 Team 11,P052,Participant_52,FIFA,2,ATTACKER,LEADER
-Team 11,P013,Participant_13,DOTA 2,4,DEFENDER,LEADER
-Team 11,P099,Participant_99,Valorant,3,SUPPORTER,THINKER
-Team 11 SUMMARY,,,Average Skill: 4.2,Unique Roles: 4,Personalities: 2L/2B/1T,
+Team 11,P062,Participant_62,Basketball,6,ATTACKER,BALANCED
+Team 11 SUMMARY,,,Average Skill: 4.4,Unique Roles: 3,Personalities: 2L/2B/1T,
 
-Team 12,P020,Participant_20,Valorant,3,COORDINATOR,BALANCED
-Team 12,P074,Participant_74,FIFA,3,SUPPORTER,BALANCED
-Team 12,P027,Participant_27,Chess,6,ATTACKER,THINKER
-Team 12,P100,Participant_100,CS:GO,7,COORDINATOR,LEADER
-Team 12,P047,Participant_47,DOTA 2,10,ATTACKER,BALANCED
-Team 12 SUMMARY,,,Average Skill: 5.8,Unique Roles: 3,Personalities: 1L/3B/1T,
+Team 12,P021,Participant_21,FIFA,4,STRATEGIST,THINKER
+Team 12,P082,Participant_82,Valorant,10,ATTACKER,LEADER
+Team 12,P078,Participant_78,FIFA,6,DEFENDER,THINKER
+Team 12,P036,Participant_36,Chess,9,STRATEGIST,THINKER
+Team 12,P008,Participant_8,Valorant,10,DEFENDER,BALANCED
+Team 12 SUMMARY,,,Average Skill: 7.8,Unique Roles: 3,Personalities: 1L/1B/3T,
 
-Team 13,P082,Participant_82,Valorant,10,ATTACKER,LEADER
-Team 13,P088,Participant_88,FIFA,4,DEFENDER,LEADER
-Team 13,P072,Participant_72,DOTA 2,5,ATTACKER,THINKER
-Team 13,P078,Participant_78,FIFA,6,DEFENDER,THINKER
-Team 13,P001,Participant_1,Chess,2,STRATEGIST,LEADER
-Team 13 SUMMARY,,,Average Skill: 5.4,Unique Roles: 3,Personalities: 3L/0B/2T,
+Team 13,P064,Participant_64,CS:GO,6,SUPPORTER,LEADER
+Team 13,P060,Participant_60,CS:GO,4,COORDINATOR,THINKER
+Team 13,P013,Participant_13,DOTA 2,4,DEFENDER,LEADER
+Team 13,P025,Participant_25,FIFA,9,COORDINATOR,LEADER
+Team 13,P028,Participant_28,CS:GO,8,DEFENDER,LEADER
+Team 13 SUMMARY,,,Average Skill: 6.2,Unique Roles: 3,Personalities: 4L/0B/1T,
 
-Team 14,P053,Participant_53,DOTA 2,7,DEFENDER,BALANCED
-Team 14,P019,Participant_19,FIFA,9,SUPPORTER,LEADER
-Team 14,P036,Participant_36,Chess,9,STRATEGIST,THINKER
-Team 14,P024,Participant_24,DOTA 2,7,SUPPORTER,THINKER
-Team 14,P061,Participant_61,CS:GO,7,STRATEGIST,LEADER
-Team 14 SUMMARY,,,Average Skill: 7.8,Unique Roles: 3,Personalities: 2L/1B/2T,
+Team 14,P035,Participant_35,Basketball,8,COORDINATOR,BALANCED
+Team 14,P023,Participant_23,CS:GO,3,DEFENDER,BALANCED
+Team 14,P079,Participant_79,Chess,5,SUPPORTER,LEADER
+Team 14,P026,Participant_26,Chess,8,STRATEGIST,BALANCED
+Team 14,P055,Participant_55,Chess,8,COORDINATOR,LEADER
+Team 14 SUMMARY,,,Average Skill: 6.4,Unique Roles: 4,Personalities: 2L/3B/0T,
 
-Team 15,P015,Participant_15,DOTA 2,8,COORDINATOR,THINKER
-Team 15,P091,Participant_91,FIFA,10,STRATEGIST,LEADER
-Team 15,P023,Participant_23,CS:GO,3,DEFENDER,BALANCED
-Team 15,P031,Participant_31,Basketball,8,STRATEGIST,LEADER
-Team 15,P092,Participant_92,Basketball,7,ATTACKER,BALANCED
-Team 15 SUMMARY,,,Average Skill: 7.2,Unique Roles: 4,Personalities: 2L/2B/1T,
+Team 15,P020,Participant_20,Valorant,3,COORDINATOR,BALANCED
+Team 15,P096,Participant_96,DOTA 2,8,STRATEGIST,THINKER
+Team 15,P100,Participant_100,CS:GO,7,COORDINATOR,LEADER
+Team 15,P017,Participant_17,CS:GO,10,ATTACKER,BALANCED
+Team 15,P044,Participant_44,FIFA,6,SUPPORTER,BALANCED
+Team 15 SUMMARY,,,Average Skill: 6.8,Unique Roles: 4,Personalities: 1L/3B/1T,
 
-Team 16,P026,Participant_26,Chess,8,STRATEGIST,BALANCED
-Team 16,P060,Participant_60,CS:GO,4,COORDINATOR,THINKER
-Team 16,P051,Participant_51,FIFA,2,STRATEGIST,THINKER
-Team 16,P071,Participant_71,Chess,8,STRATEGIST,BALANCED
-Team 16,P084,Participant_84,FIFA,5,SUPPORTER,THINKER
-Team 16 SUMMARY,,,Average Skill: 5.4,Unique Roles: 3,Personalities: 0L/2B/3T,
+Team 16,P014,Participant_14,FIFA,3,SUPPORTER,BALANCED
+Team 16,P032,Participant_32,DOTA 2,2,ATTACKER,BALANCED
+Team 16,P074,Participant_74,FIFA,3,SUPPORTER,BALANCED
+Team 16,P040,Participant_40,Chess,9,COORDINATOR,LEADER
+Team 16,P004,Participant_4,Basketball,4,SUPPORTER,LEADER
+Team 16 SUMMARY,,,Average Skill: 4.2,Unique Roles: 3,Personalities: 2L/3B/0T,
 
-Team 17,P042,Participant_42,DOTA 2,7,ATTACKER,THINKER
-Team 17,P006,Participant_6,CS:GO,2,STRATEGIST,THINKER
-Team 17,P002,Participant_2,FIFA,5,ATTACKER,BALANCED
-Team 17,P021,Participant_21,FIFA,4,STRATEGIST,THINKER
-Team 17,P003,Participant_3,FIFA,4,DEFENDER,THINKER
-Team 17 SUMMARY,,,Average Skill: 4.4,Unique Roles: 3,Personalities: 0L/1B/4T,
+Team 17,P094,Participant_94,CS:GO,2,SUPPORTER,LEADER
+Team 17,P038,Participant_38,Valorant,1,DEFENDER,BALANCED
+Team 17,P063,Participant_63,Chess,8,DEFENDER,THINKER
+Team 17,P077,Participant_77,FIFA,2,ATTACKER,BALANCED
+Team 17,P010,Participant_10,Valorant,5,COORDINATOR,LEADER
+Team 17 SUMMARY,,,Average Skill: 3.6,Unique Roles: 4,Personalities: 2L/2B/1T,
 
-Team 18,P041,Participant_41,Basketball,5,STRATEGIST,BALANCED
-Team 18,P059,Participant_59,DOTA 2,4,SUPPORTER,BALANCED
-Team 18,P044,Participant_44,FIFA,6,SUPPORTER,BALANCED
-Team 18,P035,Participant_35,Basketball,8,COORDINATOR,BALANCED
-Team 18,P040,Participant_40,Chess,9,COORDINATOR,LEADER
-Team 18 SUMMARY,,,Average Skill: 6.4,Unique Roles: 3,Personalities: 1L/4B/0T,
+Team 18,P072,Participant_72,DOTA 2,5,ATTACKER,THINKER
+Team 18,P088,Participant_88,FIFA,4,DEFENDER,LEADER
+Team 18,P053,Participant_53,DOTA 2,7,DEFENDER,BALANCED
+Team 18,P002,Participant_2,FIFA,5,ATTACKER,BALANCED
+Team 18,P086,Participant_86,FIFA,9,STRATEGIST,BALANCED
+Team 18 SUMMARY,,,Average Skill: 6.0,Unique Roles: 3,Personalities: 1L/3B/1T,
 
-Team 19,P098,Participant_98,CS:GO,5,DEFENDER,BALANCED
-Team 19,P032,Participant_32,DOTA 2,2,ATTACKER,BALANCED
-Team 19,P050,Participant_50,Basketball,5,COORDINATOR,BALANCED
-Team 19,P077,Participant_77,FIFA,2,ATTACKER,BALANCED
-Team 19,P064,Participant_64,CS:GO,6,SUPPORTER,LEADER
-Team 19 SUMMARY,,,Average Skill: 4.0,Unique Roles: 4,Personalities: 1L/4B/0T,
+Team 19,P037,Participant_37,DOTA 2,8,ATTACKER,LEADER
+Team 19,P068,Participant_68,Chess,1,DEFENDER,BALANCED
+Team 19,P022,Participant_22,Chess,9,ATTACKER,LEADER
+Team 19,P041,Participant_41,Basketball,5,STRATEGIST,BALANCED
+Team 19,P092,Participant_92,Basketball,7,ATTACKER,BALANCED
+Team 19 SUMMARY,,,Average Skill: 6.0,Unique Roles: 3,Personalities: 2L/3B/0T,
 
-Team 20,P085,Participant_85,Basketball,10,COORDINATOR,LEADER
-Team 20,P057,Participant_57,CS:GO,7,ATTACKER,THINKER
+Team 20,P058,Participant_58,Valorant,3,DEFENDER,LEADER
+Team 20,P007,Participant_7,DOTA 2,5,ATTACKER,LEADER
 Team 20,P054,Participant_54,Valorant,8,SUPPORTER,THINKER
-Team 20,P069,Participant_69,CS:GO,5,SUPPORTER,THINKER
-Team 20,P034,Participant_34,FIFA,7,SUPPORTER,LEADER
-Team 20 SUMMARY,,,Average Skill: 7.4,Unique Roles: 3,Personalities: 2L/0B/3T,
+Team 20,P001,Participant_1,Chess,2,STRATEGIST,LEADER
+Team 20,P051,Participant_51,FIFA,2,STRATEGIST,THINKER
+Team 20 SUMMARY,,,Average Skill: 4.0,Unique Roles: 4,Personalities: 3L/0B/2T,
 
