@@ -28,7 +28,7 @@ public class MainMenu {
             String choice = sc.nextLine().trim();
 
             if (choice.isEmpty()) {
-                System.out.println("⚠️ Input cannot be empty.");
+                System.out.println("Input cannot be empty.");
                 continue;
             }
 
@@ -39,13 +39,13 @@ public class MainMenu {
                     case "3" -> importParticipants(sc, defaultParticipants);
                     case "4" -> exportTeams(sc, defaultTeams);
                     case "5" -> {
-                        System.out.println("👋 Goodbye!");
+                        System.out.println("Goodbye!");
                         return;
                     }
-                    default -> System.out.println("⚠️ Invalid option. Please select 1-5.");
+                    default -> System.out.println("Invalid option. Please select 1-5.");
                 }
             } catch (Exception e) {
-                System.err.println("❌ Error: " + e.getMessage());
+                System.err.println("Error: " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -60,20 +60,20 @@ public class MainMenu {
         try {
             List<Participant> imported = CSVHandler.load(source);
             if (imported.isEmpty()) {
-                System.out.println("⚠️ No valid participants found in that file.");
+                System.out.println("No valid participants found in that file.");
                 return;
             }
             CSVHandler.save(defaultPath, imported);
-            System.out.println("✅ Successfully imported " + imported.size() + " participants to system!");
+            System.out.println("Successfully imported " + imported.size() + " participants to system!");
         } catch (IOException e) {
-            System.out.println("❌ File error: " + e.getMessage());
+            System.out.println("File error: " + e.getMessage());
         }
     }
 
     // Export formed teams
     private static void exportTeams(Scanner sc, Path defaultTeamPath) {
         if (!Files.exists(defaultTeamPath)) {
-            System.out.println("⚠️ No formed teams found. Please run 'Form Teams' (Option 2) first.");
+            System.out.println("No formed teams found. Please run 'Form Teams' (Option 2) first.");
             return;
         }
 
@@ -83,9 +83,9 @@ public class MainMenu {
 
         try {
             CSVHandler.exportFile(defaultTeamPath, destination);
-            System.out.println("✅ Teams exported successfully to: " + destination.toAbsolutePath());
+            System.out.println("Teams exported successfully to: " + destination.toAbsolutePath());
         } catch (IOException e) {
-            System.out.println("❌ Export failed: " + e.getMessage());
+            System.out.println("Export failed: " + e.getMessage());
         }
     }
 
@@ -98,7 +98,6 @@ public class MainMenu {
         System.out.print("Enter Name: ");
         String name = getValidInput(sc, "Name");
 
-        // FIXED: Uses helper method so 'email' is assigned only ONCE (Effectively Final)
         String email = getValidEmail(sc);
 
         System.out.println("\nSelect Game:");
@@ -113,7 +112,7 @@ public class MainMenu {
             default -> "Unknown";
         };
 
-        System.out.print("Enter Skill Level (1–10): ");
+        System.out.print("Enter Skill Level (1-10): ");
         int skill = getValidInt(sc, 1, 10);
 
         System.out.println("\nSelect Role:");
@@ -133,14 +132,13 @@ public class MainMenu {
         int[] answers = new int[5];
         for (int i = 0; i < questions.length; i++) {
             System.out.println(questions[i]);
-            System.out.print("Rate (1–5): ");
+            System.out.print("Rate (1-5): ");
             answers[i] = getValidInt(sc, 1, 5);
         }
 
-        //  Threading for Survey
+        // Threading for Survey
         ExecutorService surveyThread = Executors.newSingleThreadExecutor();
         Future<Participant> future = surveyThread.submit(() -> {
-            // 'email' is now safe to use because it is effectively final
             int score = Personality.calculateScore(answers);
             Participant.PersonalityType type = Personality.classify(score);
             return new Participant(id, name, email, game, skill, role, score, type);
@@ -158,32 +156,68 @@ public class MainMenu {
 
         participants.add(newP);
         CSVHandler.save(path, participants);
-        System.out.println("\n✅ Player added!");
+        System.out.println("\nPlayer added!");
     }
 
+    // -------------------------------------------------------------
+    // FORM TEAMS (Uses Background Thread & Animation)
+    // -------------------------------------------------------------
     private static void formTeams(Scanner sc, Path participantsPath, Path teamsPath)
             throws IOException, InterruptedException {
+
         List<Participant> players = CSVHandler.load(participantsPath);
         if (players.isEmpty()) {
-            System.out.println("⚠️ No participants found. Add members or Import CSV (Option 3) first!");
+            System.out.println("No participants found. Add members or Import CSV (Option 3) first!");
             return;
         }
 
         System.out.print("Enter team size: ");
         int teamSize = getValidInt(sc, 1, players.size());
 
-        System.out.println("\n⚙️ Forming balanced teams....");
-        List<Team> teams = TeamBuilder.build(new ArrayList<>(players), teamSize);
+        System.out.print("\nForming balanced teams (Parallel Processing)");
 
-        TeamBuilder.saveTeams(teamsPath, teams);
-        System.out.println("\n✅ Teams saved to formed_teams.csv!");
+        // 1. Create a Thread Executor to run the task in background
+        ExecutorService uiExecutor = Executors.newSingleThreadExecutor();
 
+        // 2. Submit the heavy TeamBuilder task
+        Future<List<Team>> futureTeams = uiExecutor.submit(() ->
+                TeamBuilder.build(new ArrayList<>(players), teamSize)
+        );
+
+        // 3. Display "Loading..." animation while waiting
+        while (!futureTeams.isDone()) {
+            System.out.print(".");
+            try {
+                Thread.sleep(300); // 300ms visual delay
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // Restore interrupt status
+            }
+        }
+        System.out.println(" Done!");
+
+        // 4. Retrieve the result
+        List<Team> teams;
+        try {
+            teams = futureTeams.get();
+        } catch (ExecutionException e) {
+            System.err.println("\nError during team formation: " + e.getMessage());
+            uiExecutor.shutdown();
+            return;
+        } finally {
+            uiExecutor.shutdown(); // Clean up thread
+        }
+
+        // 5. Save (Sorted by Skill Descending via CSVHandler)
+        CSVHandler.saveTeams(teamsPath, teams);
+        System.out.println("Teams saved to formed_teams.csv (Sorted by Skill)!");
+
+        // 6. Display Summary
         for (Team t : teams) {
             System.out.println(t.getSummary());
         }
     }
 
-    //  logic extracted here to keep 'email' variable final in main method
+    // HELPER: Validate Email
     private static String getValidEmail(Scanner sc) {
         while (true) {
             System.out.print("Enter Email: ");
@@ -191,11 +225,11 @@ public class MainMenu {
             if (EMAIL_PATTERN.matcher(input).matches()) {
                 return input;
             }
-            System.out.println("⚠️ Invalid email format! (e.g., user@example.com)");
+            System.out.println("Invalid email format! (e.g., user@example.com)");
         }
     }
 
-    //  HELPER: Validate Integers
+    // HELPER: Validate Integers
     private static int getValidInt(Scanner sc, int min, int max) {
         int input;
         while (true) {
@@ -205,21 +239,21 @@ public class MainMenu {
                 if (input >= min && input <= max) {
                     return input;
                 } else {
-                    System.out.printf("⚠️ Please enter a number between %d and %d: ", min, max);
+                    System.out.printf("Please enter a number between %d and %d: ", min, max);
                 }
             } catch (NumberFormatException e) {
-                System.out.print("⚠️ Invalid input. Enter a number: ");
+                System.out.print("Invalid input. Enter a number: ");
             }
         }
     }
 
-    //  HELPER: Validate String Input
+    // HELPER: Validate String Input
     private static String getValidInput(Scanner sc, String fieldName) {
         String input;
         while (true) {
             input = sc.nextLine().trim();
             if (!input.isEmpty()) return input;
-            System.out.printf("⚠️ %s cannot be empty. Try again: ", fieldName);
+            System.out.printf("%s cannot be empty. Try again: ", fieldName);
         }
     }
 }

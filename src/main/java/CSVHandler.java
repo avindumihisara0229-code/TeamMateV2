@@ -8,12 +8,11 @@ public class CSVHandler {
 
     private static final String HEADER = "ID,Name,Email,PreferredGame,SkillLevel,PreferredRole,PersonalityScore,PersonalityType";
 
-    // Load participants from any given path
+    // Load participants (Standard)
     public static List<Participant> load(Path path) throws IOException {
         List<Participant> list = new ArrayList<>();
 
         if (!Files.exists(path)) {
-            // Only create default file if we are loading from the default location
             if (path.toString().contains("data/participants.csv")) {
                 Files.createDirectories(path.getParent());
                 Files.write(path, List.of(HEADER));
@@ -26,9 +25,7 @@ public class CSVHandler {
 
         for (int i = 1; i < lines.size(); i++) {
             String[] data = lines.get(i).split(",");
-            // Robust check: ensure line has enough columns
             if (data.length < 8) continue;
-
             try {
                 Participant p = new Participant(
                         data[0], data[1], data[2], data[3],
@@ -45,7 +42,7 @@ public class CSVHandler {
         return list;
     }
 
-    // Save list to path
+    // Save Participants (Standard)
     public static void save(Path path, List<Participant> list) throws IOException {
         List<String> lines = new ArrayList<>();
         lines.add(HEADER);
@@ -60,7 +57,58 @@ public class CSVHandler {
         Files.write(path, lines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     }
 
-    // Export helper: Copies one file to another location
+    // ---------------------------------------------------------------
+    // MODIFIED METHOD: Save Teams (Sorted by Skill DESCENDING)
+    // ---------------------------------------------------------------
+    public static void saveTeams(Path path, List<Team> teams) throws IOException {
+
+        // 1. SORTING: Sort teams by Average Skill (Highest to Lowest)
+        // Added .reversed() here
+        teams.sort(Comparator.comparingDouble(Team::getAverageSkill).reversed());
+
+        List<String> lines = new ArrayList<>();
+        lines.add("TeamID,PlayerID,Name,Game,Skill,Role,PersonalityType");
+
+        for (Team t : teams) {
+            // Write individual members
+            for (Participant p : t.members) {
+                lines.add(String.join(",",
+                        "Team " + t.id,
+                        p.id,
+                        p.name,
+                        p.game,
+                        String.valueOf(p.skill),
+                        p.role.name(),
+                        p.type.name()
+                ));
+            }
+
+            // Write Team Summary Row
+            if (!t.members.isEmpty()) {
+                double avgSkill = t.getAverageSkill();
+                int uniqueRoles = t.getUniqueRoleCount();
+                long leaders = t.members.stream().filter(m -> m.type == Participant.PersonalityType.LEADER).count();
+                long balanced = t.members.stream().filter(m -> m.type == Participant.PersonalityType.BALANCED).count();
+                long thinkers = t.members.stream().filter(m -> m.type == Participant.PersonalityType.THINKER).count();
+
+                lines.add(String.join(",",
+                        "Team " + t.id + " SUMMARY",
+                        "",
+                        "",
+                        "Avg Skill: " + String.format("%.1f", avgSkill),
+                        "Unique Roles: " + uniqueRoles,
+                        "Comp: " + leaders + "L / " + thinkers + "T / " + balanced + "B",
+                        ""
+                ));
+            }
+            lines.add(""); // Empty line for readability
+        }
+
+        Files.createDirectories(path.getParent());
+        Files.write(path, lines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+    }
+
+    // Export helper
     public static void exportFile(Path source, Path destination) throws IOException {
         if (!Files.exists(source)) {
             throw new FileNotFoundException("Source file does not exist. Please form teams first.");
