@@ -57,13 +57,22 @@ public class CSVHandler {
         Files.write(path, lines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     }
 
-    // ---------------------------------------------------------------
-    // MODIFIED METHOD: Save Teams (Sorted by Skill DESCENDING)
-    // ---------------------------------------------------------------
+
+    // Load Raw Lines (For Viewing)
+
+    public static List<String> loadRaw(Path path) throws IOException {
+        if (!Files.exists(path)) {
+            return new ArrayList<>();
+        }
+        return Files.readAllLines(path);
+    }
+
+
+    // Save Teams (Sorted by Skill DESCENDING)
+
     public static void saveTeams(Path path, List<Team> teams) throws IOException {
 
-        // 1. SORTING: Sort teams by Average Skill (Highest to Lowest)
-        // Added .reversed() here
+        // 1. SORTING - Sort teams by Average Skill (Highest to Lowest)
         teams.sort(Comparator.comparingDouble(Team::getAverageSkill).reversed());
 
         List<String> lines = new ArrayList<>();

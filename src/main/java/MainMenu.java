@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 
 public class MainMenu {
 
-    // Regex for simple email validation
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
 
     public static void main(String[] args) {
@@ -20,8 +19,8 @@ public class MainMenu {
             System.out.println("\n==== TEAM BUILDER MENU ====");
             System.out.println("1. Add Member + Survey");
             System.out.println("2. Form Teams (Default)");
-            System.out.println("3. Import Participants (External CSV)");
-            System.out.println("4. Export Formed Teams (Save As...)");
+            System.out.println("3. View Last Formed Teams");
+            System.out.println("4. Upload CSV (External CSV)");
             System.out.println("5. Exit");
             System.out.print("Choose option: ");
 
@@ -36,8 +35,8 @@ public class MainMenu {
                 switch (choice) {
                     case "1" -> addParticipant(sc, defaultParticipants);
                     case "2" -> formTeams(sc, defaultParticipants, defaultTeams);
-                    case "3" -> importParticipants(sc, defaultParticipants);
-                    case "4" -> exportTeams(sc, defaultTeams);
+                    case "3" -> viewTeams(defaultTeams); // Uses new table formatter
+                    case "4" -> importParticipants(sc, defaultParticipants);
                     case "5" -> {
                         System.out.println("Goodbye!");
                         return;
@@ -51,7 +50,88 @@ public class MainMenu {
         }
     }
 
-    // Import external CSV
+
+    // NEW METHOD: View Teams (Table Format)
+
+    private static void viewTeams(Path teamsPath) {
+        System.out.println("\n--- EXISTING TEAMS DATA ---");
+        try {
+            List<String> lines = CSVHandler.loadRaw(teamsPath);
+
+            if (lines.isEmpty()) {
+                System.out.println("No team data found. Please form teams first.");
+                return;
+            }
+
+            // 1. Read all data to calculate column widths
+            List<String[]> rows = new ArrayList<>();
+            // We expect 7 columns based on CSVHandler.saveTeams
+            int[] colWidths = new int[7];
+
+            for (String line : lines) {
+                if (line.trim().isEmpty()) {
+                    rows.add(null); // Add null to represent a separator line (empty space in CSV)
+                    continue;
+                }
+
+                // Split by comma, -1 ensures we keep empty trailing columns
+                String[] cells = line.split(",", -1);
+                rows.add(cells);
+
+                // Update max width for each column
+                for (int i = 0; i < cells.length && i < colWidths.length; i++) {
+                    int length = cells[i].trim().length();
+                    if (length > colWidths[i]) {
+                        colWidths[i] = length;
+                    }
+                }
+            }
+
+            // 2. Build the format string (e.g., "| %-10s | %-15s | ...")
+            StringBuilder formatBuilder = new StringBuilder();
+            for (int width : colWidths) {
+                formatBuilder.append("| %-").append(width).append("s ");
+            }
+            formatBuilder.append("|%n"); // Newline
+            String format = formatBuilder.toString();
+
+            // 3. Print the Table
+            printTableSeparator(colWidths);
+
+            for (String[] row : rows) {
+                if (row == null) {
+                    // Print a separator line when we hit a null (empty line in CSV)
+                    printTableSeparator(colWidths);
+                } else {
+                    // Create an object array padded to 7 columns to avoid crashes
+                    Object[] args = new Object[7];
+                    for (int i = 0; i < 7; i++) {
+                        args[i] = (i < row.length) ? row[i].trim() : "";
+                    }
+                    System.out.printf(format, args);
+                }
+            }
+            printTableSeparator(colWidths);
+
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+    }
+
+    // Helper to print the horizontal lines (+--------+-------+)
+    private static void printTableSeparator(int[] widths) {
+        System.out.print("+");
+        for (int w : widths) {
+            // w + 2 accounts for the extra spaces added in the format string
+            System.out.print("-".repeat(w + 2) + "+");
+        }
+        System.out.println();
+    }
+
+
+    // Existing Methods (Unchanged)
+
+
     private static void importParticipants(Scanner sc, Path defaultPath) {
         System.out.print("Enter full file path to import (e.g., C:/Downloads/class_list.csv): ");
         String inputPath = sc.nextLine().trim();
@@ -70,25 +150,6 @@ public class MainMenu {
         }
     }
 
-    // Export formed teams
-    private static void exportTeams(Scanner sc, Path defaultTeamPath) {
-        if (!Files.exists(defaultTeamPath)) {
-            System.out.println("No formed teams found. Please run 'Form Teams' (Option 2) first.");
-            return;
-        }
-
-        System.out.print("Enter destination path (e.g., D:/Results/final_teams.csv): ");
-        String destPath = sc.nextLine().trim();
-        Path destination = Paths.get(destPath);
-
-        try {
-            CSVHandler.exportFile(defaultTeamPath, destination);
-            System.out.println("Teams exported successfully to: " + destination.toAbsolutePath());
-        } catch (IOException e) {
-            System.out.println("Export failed: " + e.getMessage());
-        }
-    }
-
     private static void addParticipant(Scanner sc, Path path) throws IOException {
         List<Participant> participants = CSVHandler.load(path);
 
@@ -103,6 +164,7 @@ public class MainMenu {
         System.out.println("\nSelect Game:");
         System.out.println("1. CS:GO\n2. Valorant\n3. Chess\n4. FIFA\n5. Dota 2");
         int gChoice = getValidInt(sc, 1, 5);
+
         String game = switch (gChoice) {
             case 1 -> "CS:GO";
             case 2 -> "Valorant";
@@ -136,7 +198,6 @@ public class MainMenu {
             answers[i] = getValidInt(sc, 1, 5);
         }
 
-        // Threading for Survey
         ExecutorService surveyThread = Executors.newSingleThreadExecutor();
         Future<Participant> future = surveyThread.submit(() -> {
             int score = Personality.calculateScore(answers);
@@ -147,7 +208,7 @@ public class MainMenu {
         Participant newP;
         try {
             newP = future.get();
-        } catch (ExecutionException | InterruptedException e) {
+        } catch (Exception e) {
             Thread.currentThread().interrupt();
             throw new RuntimeException("Error in survey processing.");
         } finally {
@@ -159,15 +220,12 @@ public class MainMenu {
         System.out.println("\nPlayer added!");
     }
 
-    // -------------------------------------------------------------
-    // FORM TEAMS (Uses Background Thread & Animation)
-    // -------------------------------------------------------------
     private static void formTeams(Scanner sc, Path participantsPath, Path teamsPath)
             throws IOException, InterruptedException {
 
         List<Participant> players = CSVHandler.load(participantsPath);
         if (players.isEmpty()) {
-            System.out.println("No participants found. Add members or Import CSV (Option 3) first!");
+            System.out.println("No participants found. Add members or Import CSV first!");
             return;
         }
 
@@ -176,48 +234,37 @@ public class MainMenu {
 
         System.out.print("\nForming balanced teams (Parallel Processing)");
 
-        // 1. Create a Thread Executor to run the task in background
         ExecutorService uiExecutor = Executors.newSingleThreadExecutor();
 
-        // 2. Submit the heavy TeamBuilder task
         Future<List<Team>> futureTeams = uiExecutor.submit(() ->
                 TeamBuilder.build(new ArrayList<>(players), teamSize)
         );
 
-        // 3. Display "Loading..." animation while waiting
         while (!futureTeams.isDone()) {
             System.out.print(".");
-            try {
-                Thread.sleep(300); // 300ms visual delay
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt(); // Restore interrupt status
-            }
+            Thread.sleep(300);
         }
+
         System.out.println(" Done!");
 
-        // 4. Retrieve the result
         List<Team> teams;
         try {
             teams = futureTeams.get();
         } catch (ExecutionException e) {
-            System.err.println("\nError during team formation: " + e.getMessage());
+            System.err.println("\nError: " + e.getMessage());
             uiExecutor.shutdown();
             return;
         } finally {
-            uiExecutor.shutdown(); // Clean up thread
+            uiExecutor.shutdown();
         }
 
-        // 5. Save (Sorted by Skill Descending via CSVHandler)
         CSVHandler.saveTeams(teamsPath, teams);
-        System.out.println("Teams saved to formed_teams.csv (Sorted by Skill)!");
+        System.out.println("Teams saved!");
 
-        // 6. Display Summary
-        for (Team t : teams) {
-            System.out.println(t.getSummary());
-        }
+        // Removed the text user can now use Option 3 to view it nicely
+        System.out.println("Use Option 3 to view the generated teams.");
     }
 
-    // HELPER: Validate Email
     private static String getValidEmail(Scanner sc) {
         while (true) {
             System.out.print("Enter Email: ");
@@ -225,33 +272,27 @@ public class MainMenu {
             if (EMAIL_PATTERN.matcher(input).matches()) {
                 return input;
             }
-            System.out.println("Invalid email format! (e.g., user@example.com)");
+            System.out.println("Invalid email format!");
         }
     }
 
-    // HELPER: Validate Integers
     private static int getValidInt(Scanner sc, int min, int max) {
-        int input;
         while (true) {
             try {
-                String line = sc.nextLine();
-                input = Integer.parseInt(line.trim());
+                int input = Integer.parseInt(sc.nextLine().trim());
                 if (input >= min && input <= max) {
                     return input;
-                } else {
-                    System.out.printf("Please enter a number between %d and %d: ", min, max);
                 }
+                System.out.printf("Enter a number between %d and %d: ", min, max);
             } catch (NumberFormatException e) {
-                System.out.print("Invalid input. Enter a number: ");
+                System.out.print("Invalid number. Try again: ");
             }
         }
     }
 
-    // HELPER: Validate String Input
     private static String getValidInput(Scanner sc, String fieldName) {
-        String input;
         while (true) {
-            input = sc.nextLine().trim();
+            String input = sc.nextLine().trim();
             if (!input.isEmpty()) return input;
             System.out.printf("%s cannot be empty. Try again: ", fieldName);
         }
